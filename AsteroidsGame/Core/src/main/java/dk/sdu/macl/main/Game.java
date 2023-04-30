@@ -12,6 +12,7 @@ import dk.sdu.macl.common.data.World;
 import dk.sdu.macl.common.services.IEntityProcessingService;
 import dk.sdu.macl.common.services.IGamePluginService;
 import dk.sdu.macl.common.services.IPostEntityProcessingService;
+import dk.sdu.macl.common.util.SPILocator;
 import dk.sdu.macl.enemysystem.EnemyPlugin;
 import dk.sdu.macl.managers.GameInputProcessor;
 import dk.sdu.macl.playersystem.PlayerControlSystem;
@@ -23,6 +24,7 @@ import dk.sdu.macl.collisionsystem.CollisionHandler;
 import dk.sdu.macl.bulletsystem.BulletPlugin;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Game implements ApplicationListener {
@@ -52,33 +54,33 @@ public class Game implements ApplicationListener {
                 new GameInputProcessor(gameData)
         );
 
-        IGamePluginService playerPlugin = new PlayerPlugin();
-        IEntityProcessingService playerProcess = new PlayerControlSystem();
-        entityPlugins.add(playerPlugin);
-        entityProcessors.add(playerProcess);
+//        IGamePluginService playerPlugin = new PlayerPlugin();
+//        IEntityProcessingService playerProcess = new PlayerControlSystem();
+//        entityPlugins.add(playerPlugin);
+//        entityProcessors.add(playerProcess);
+//
+//        IGamePluginService enemyPlugin = new EnemyPlugin();
+//        IEntityProcessingService enemyProcess = new EnemyControlSystem();
+//        entityPlugins.add(enemyPlugin);
+//        entityProcessors.add(enemyProcess);
+//
+//        IGamePluginService asteroidPlugin = new AsteroidPlugin(20);
+//        IEntityProcessingService asteroidProcess = new AsteroidControlSystem();
+//        entityPlugins.add(asteroidPlugin);
+//        entityProcessors.add(asteroidProcess);
+//
+//        IGamePluginService bulletPlugin = new BulletPlugin();
+//        IEntityProcessingService bulletProcess = new BulletControlSystem();
+//        entityPlugins.add(bulletPlugin);
+//        entityProcessors.add(bulletProcess);
+//
+//        IPostEntityProcessingService collisionHandler = new CollisionHandler();
+//        postEntityProcessors.add(collisionHandler);
 
-        IGamePluginService enemyPlugin = new EnemyPlugin();
-        IEntityProcessingService enemyProcess = new EnemyControlSystem();
-        entityPlugins.add(enemyPlugin);
-        entityProcessors.add(enemyProcess);
 
-        IGamePluginService asteroidPlugin = new AsteroidPlugin(20);
-        IEntityProcessingService asteroidProcess = new AsteroidControlSystem();
-        entityPlugins.add(asteroidPlugin);
-        entityProcessors.add(asteroidProcess);
-
-        IGamePluginService bulletPlugin = new BulletPlugin();
-        IEntityProcessingService bulletProcess = new BulletControlSystem();
-        entityPlugins.add(bulletPlugin);
-        entityProcessors.add(bulletProcess);
-
-        IPostEntityProcessingService collisionHandler = new CollisionHandler();
-        postEntityProcessors.add(collisionHandler);
-
-
-        // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : entityPlugins) {
-            iGamePlugin.start(gameData, world);
+        // Lookup all Game Plugins using ServiceLoader and register them
+        for (IGamePluginService gamePlugin : getPluginServices()) {
+            gamePlugin.start(gameData, world);
         }
     }
 
@@ -100,10 +102,10 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : entityProcessors) {
+        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
-        for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessors) {
+        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
     }
@@ -143,5 +145,17 @@ public class Game implements ApplicationListener {
 
     @Override
     public void dispose() {
+    }
+
+    private Collection<? extends IGamePluginService> getPluginServices() {
+        return SPILocator.locateAll(IGamePluginService.class);
+    }
+
+    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
+        return SPILocator.locateAll(IEntityProcessingService.class);
+    }
+
+    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
+        return SPILocator.locateAll(IPostEntityProcessingService.class);
     }
 }
