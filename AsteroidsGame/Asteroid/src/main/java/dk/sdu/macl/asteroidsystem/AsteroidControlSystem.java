@@ -22,9 +22,6 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                 lifePart.setLife(lifePart.getLife() - 1);
                 float oldX = positionPart.getX();
                 float oldY = positionPart.getY();
-                float oldRadians = positionPart.getRadians();
-                float oldRadius = asteroid.getRadius();
-                boolean shouldSplit = lifePart.getLife() == 1 ? true : false;
                 /**
                  * Get position, rotation and radius of asteroid.
                  * Remove big asteroid.
@@ -33,16 +30,13 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                  */
                 world.removeEntity(asteroid);
 
-                if (shouldSplit) {
+                // We now spawn a small asteroid. We need to spawn two asteroids instead now.
+                if (lifePart.getLife() == 1) {
                     System.out.println("SPLIT");
-                    Asteroid a1 = new Asteroid();
-                    a1.add(new PositionPart(oldX, oldY, oldRadians));
-                    a1.add(new LifePart(1, 0));
-                    a1.add(new MovingPart(0, 10, 10, 0));
-//                    Asteroid a1 = createBaseSmall();
-//                    Asteroid a2 = createBaseSmall();
+                    Asteroid a1 = createBaseSmall(oldX, oldY);
+                    Asteroid a2 = createBaseSmall(oldX, oldY);
                     world.addEntity(a1);
-//                    world.addEntity(a2);
+                    world.addEntity(a2);
                 }
 
             }
@@ -54,34 +48,36 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         }
     }
 
-    private Asteroid createBaseSmall() {
-        Asteroid asteroid = new Asteroid();
-        asteroid.setRadius(10);
-//        asteroid.add(new PositionPart());
-//        asteroid.add(new MovingPart(0, ));
-//        asteroid.add(new LifePart());
-        return asteroid;
+    private Asteroid createBaseSmall(float x, float y) {
+        Asteroid a = new Asteroid();
+        a.setRadius(10);
+        a.add(new PositionPart(x, y, (float) (Math.random() * Math.PI * 2)));
+        a.add(new LifePart(1, 0));
+        a.add(new MovingPart(0, 1000, 50, 0));
+        return a;
     }
 
     private void updateShape(Entity entity) {
         float[] shapex = entity.getShapeX();
         float[] shapey = entity.getShapeY();
         PositionPart positionPart = entity.getPart(PositionPart.class);
+        LifePart lifePart = entity.getPart(LifePart.class);
+        int size = lifePart.getLife();
         float x = positionPart.getX();
         float y = positionPart.getY();
         float radians = positionPart.getRadians();
 
-        shapex[0] = (float) (x + Math.cos(radians - 4 * 3.1415f) * 16);
-        shapey[0] = (float) (y + Math.sin(radians - 4 * 3.1415f) * 16);
+        shapex[0] = (float) (x + Math.cos(radians - 4 * 3.1415f) * 8 * size);
+        shapey[0] = (float) (y + Math.sin(radians - 4 * 3.1415f) * 8 * size);
 
-        shapex[1] = (float) (x + Math.cos(radians - 4 * 3.1415f / 8) * 16);
-        shapey[1] = (float) (y + Math.sin(radians - 4 * 3.1145f / 8) * 16);
+        shapex[1] = (float) (x + Math.cos(radians - 4 * 3.1415f / 8) * 8 * size);
+        shapey[1] = (float) (y + Math.sin(radians - 4 * 3.1145f / 8) * 8 * size);
 
-        shapex[2] = (float) (x + Math.cos(radians + 3.1415f) * 16);
-        shapey[2] = (float) (y + Math.sin(radians + 3.1415f) * 16);
+        shapex[2] = (float) (x + Math.cos(radians + 3.1415f) * 8 * size);
+        shapey[2] = (float) (y + Math.sin(radians + 3.1415f) * 8 * size);
 
-        shapex[3] = (float) (x + Math.cos(radians + 4 * 3.1415f / 8) * 16);
-        shapey[3] = (float) (y + Math.sin(radians + 4 * 3.1415f / 8) * 16);
+        shapex[3] = (float) (x + Math.cos(radians + 4 * 3.1415f / 8) * 8 * size);
+        shapey[3] = (float) (y + Math.sin(radians + 4 * 3.1415f / 8) * 8 * size);
 
         entity.setShapeX(shapex);
         entity.setShapeY(shapey);

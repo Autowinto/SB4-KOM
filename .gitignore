@@ -6,7 +6,7 @@
 *.jar
 /*/runner/
 /JavaModularAsteroids/nbproject/private/
-
+.idea
 *.aux
 *.pdf
 *.synctex.gz

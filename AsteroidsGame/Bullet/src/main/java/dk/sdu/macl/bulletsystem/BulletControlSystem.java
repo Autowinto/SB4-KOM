@@ -37,9 +37,7 @@ public class BulletControlSystem implements IEntityProcessingService {
                 lifePart.reduceExpiration(gameData.getDelta());
                 lifePart.process(gameData, entity);
 
-                if (lifePart.getExpiration() <= 0) {
-                    world.removeEntity(entity);
-                }
+                if (lifePart.getExpiration() <= 0 || lifePart.isIsHit()) world.removeEntity(entity);
 
                 updateShape(entity);
             }

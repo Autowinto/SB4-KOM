@@ -19,10 +19,11 @@ public class CollisionHandler implements IPostEntityProcessingService {
         List<Entity> entityList = world.getEntities().stream().toList();
         Set<Entity> cols = new HashSet<Entity>();
 
-        for (int i = 0; i < entityList.size(); i++) {
-            Entity e1 = entityList.get(i);
-            for (int j = i + 1; j < entityList.size(); j++) {
-                Entity e2 = entityList.get(j);
+        for (Entity e1 : entityList) {
+            for (Entity e2 : entityList) {
+                System.out.println(e1.getID());
+                // To stop asteroids from constantly breaking eachother.
+                if (e1.getClass().equals(e2.getClass())) continue;
                 if (isColliding(e1, e2)) {
                     ((LifePart) e1.getPart(LifePart.class)).setIsHit(true);
                     ((LifePart) e2.getPart(LifePart.class)).setIsHit(true);
@@ -49,6 +50,7 @@ public class CollisionHandler implements IPostEntityProcessingService {
     }
 
     private double calculateDistance(PositionPart p1, PositionPart p2) {
-        return Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
+        return Math.sqrt(
+                Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
     }
 }
