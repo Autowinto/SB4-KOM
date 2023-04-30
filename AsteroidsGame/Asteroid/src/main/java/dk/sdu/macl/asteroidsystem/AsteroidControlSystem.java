@@ -32,7 +32,6 @@ public class AsteroidControlSystem implements IEntityProcessingService {
 
                 // We now spawn a small asteroid. We need to spawn two asteroids instead now.
                 if (lifePart.getLife() == 1) {
-                    System.out.println("SPLIT");
                     Asteroid a1 = createBaseSmall(oldX, oldY);
                     Asteroid a2 = createBaseSmall(oldX, oldY);
                     world.addEntity(a1);

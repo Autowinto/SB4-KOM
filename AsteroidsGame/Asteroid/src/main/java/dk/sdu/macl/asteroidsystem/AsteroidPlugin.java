@@ -9,11 +9,7 @@ import dk.sdu.macl.common.data.entityparts.PositionPart;
 import dk.sdu.macl.common.services.IGamePluginService;
 
 public class AsteroidPlugin implements IGamePluginService {
-    private int asteroidLimit;
-
-    public AsteroidPlugin(int limit) {
-        this.asteroidLimit = limit;
-    }
+    private int asteroidLimit = 20;
 
     @Override
     public void start(GameData gameData, World world) {

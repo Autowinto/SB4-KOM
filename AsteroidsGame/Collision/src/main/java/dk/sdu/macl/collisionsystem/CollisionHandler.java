@@ -21,7 +21,6 @@ public class CollisionHandler implements IPostEntityProcessingService {
 
         for (Entity e1 : entityList) {
             for (Entity e2 : entityList) {
-                System.out.println(e1.getID());
                 // To stop asteroids from constantly breaking eachother.
                 if (e1.getClass().equals(e2.getClass())) continue;
                 if (isColliding(e1, e2)) {
