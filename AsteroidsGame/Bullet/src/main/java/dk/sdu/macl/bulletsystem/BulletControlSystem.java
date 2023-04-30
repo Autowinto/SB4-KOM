@@ -13,20 +13,6 @@ public class BulletControlSystem implements IEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
-        for (Entity entity : world.getEntities()) {
-            ShootingPart shootingPart = entity.getPart(ShootingPart.class);
-            PositionPart positionPart = entity.getPart(PositionPart.class);
-
-            // If entity has a shooting part. Handle it.
-            if (shootingPart != null) {
-                if (shootingPart.getIsShooting() && shootingPart.canShoot()) {
-                    float x = positionPart.getX();
-                    float y = positionPart.getY();
-                    float rads = positionPart.getRadians();
-                    spawnBullet(world, (float) (x + Math.cos(rads) * 15), (float) (y + Math.sin(rads) * 15), rads);
-                }
-            }
-        }
 
         for (Entity entity : world.getEntities(Bullet.class)) {
             PositionPart positionPart = entity.getPart(PositionPart.class);
@@ -42,17 +28,6 @@ public class BulletControlSystem implements IEntityProcessingService {
 
             updateShape(entity);
         }
-    }
-
-    private void spawnBullet(World world, float x, float y, float rotation) {
-        Bullet bullet = new Bullet();
-        MovingPart movingPart = new MovingPart(0, 10000, 1000, 0);
-        movingPart.setUp(true);
-        bullet.add(movingPart);
-        bullet.add(new LifePart(1, 1));
-        bullet.add(new PositionPart(x, y, rotation));
-
-        world.addEntity(bullet);
     }
 
     private void updateShape(Entity entity) {

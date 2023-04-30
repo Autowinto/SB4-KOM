@@ -11,10 +11,6 @@ import dk.sdu.macl.common.services.IEntityProcessingService;
 
 import java.util.Random;
 
-/**
- *
- * @author jcs
- */
 public class EnemyControlSystem implements IEntityProcessingService {
 
     Random random = new Random();

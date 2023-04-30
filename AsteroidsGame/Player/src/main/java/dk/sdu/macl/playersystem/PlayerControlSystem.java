@@ -12,7 +12,11 @@ import dk.sdu.macl.common.data.entityparts.LifePart;
 import dk.sdu.macl.common.data.entityparts.MovingPart;
 import dk.sdu.macl.common.data.entityparts.PositionPart;
 import dk.sdu.macl.common.data.entityparts.ShootingPart;
+import dk.sdu.macl.common.services.IBulletFactory;
 import dk.sdu.macl.common.services.IEntityProcessingService;
+import dk.sdu.macl.common.util.SPILocator;
+
+import java.util.Collection;
 
 /**
  *
@@ -41,6 +45,13 @@ public class PlayerControlSystem implements IEntityProcessingService {
 
 
             shootingPart.setIsShooting(gameData.getKeys().isDown(GameKeys.SPACE));
+            if (shootingPart.getIsShooting() && shootingPart.canShoot()) {
+                Collection<IBulletFactory> plugins = SPILocator.locateAll(IBulletFactory.class);
+
+                for (IBulletFactory plugin : plugins) {
+                    world.addEntity(plugin.create(player, gameData));
+                }
+            }
 
             updateShape(player);
         }
