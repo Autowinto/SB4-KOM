@@ -23,29 +23,30 @@ public class BulletControlSystem implements IEntityProcessingService {
                     float x = positionPart.getX();
                     float y = positionPart.getY();
                     float rads = positionPart.getRadians();
-                    spawnBullet(world, (float) (x + Math.cos(rads) * 15), (float) (y + Math.sin(rads) * 15 ), rads);
+                    spawnBullet(world, (float) (x + Math.cos(rads) * 15), (float) (y + Math.sin(rads) * 15), rads);
                 }
             }
         }
 
-            for (Entity entity : world.getEntities(Bullet.class)) {
-                PositionPart positionPart = entity.getPart(PositionPart.class);
-                MovingPart movingPart = entity.getPart(MovingPart.class);
-                LifePart lifePart = entity.getPart(LifePart.class);
-                movingPart.process(gameData, entity);
-                positionPart.process(gameData, entity);
-                lifePart.reduceExpiration(gameData.getDelta());
-                lifePart.process(gameData, entity);
+        for (Entity entity : world.getEntities(Bullet.class)) {
+            PositionPart positionPart = entity.getPart(PositionPart.class);
+            MovingPart movingPart = entity.getPart(MovingPart.class);
+            LifePart lifePart = entity.getPart(LifePart.class);
+            movingPart.process(gameData, entity);
+            positionPart.process(gameData, entity);
+            lifePart.reduceExpiration(gameData.getDelta());
+            lifePart.process(gameData, entity);
 
-                if (lifePart.getExpiration() <= 0 || lifePart.isIsHit()) world.removeEntity(entity);
+            if (lifePart.getExpiration() <= 0 || lifePart.isIsHit())
+                world.removeEntity(entity);
 
-                updateShape(entity);
-            }
+            updateShape(entity);
+        }
     }
 
     private void spawnBullet(World world, float x, float y, float rotation) {
         Bullet bullet = new Bullet();
-        MovingPart movingPart = new MovingPart(0, 1000, 1000, 0);
+        MovingPart movingPart = new MovingPart(0, 10000, 1000, 0);
         movingPart.setUp(true);
         bullet.add(movingPart);
         bullet.add(new LifePart(1, 1));
