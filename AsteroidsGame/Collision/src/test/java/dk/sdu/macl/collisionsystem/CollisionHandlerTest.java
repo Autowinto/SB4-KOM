@@ -16,7 +16,7 @@ public class CollisionHandlerTest {
     public void init() {
         collisionHandler = new CollisionHandler();
     }
-    
+
     @Test
     public void distanceCalculationTest() {
         PositionPart p1 = new PositionPart(20, 20, 0);
