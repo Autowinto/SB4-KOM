@@ -31,16 +31,17 @@ public class CollisionHandler implements IPostEntityProcessingService {
         }
     }
 
-    private boolean isColliding(Entity e1, Entity e2) {
-        LifePart l1 = (LifePart) e1.getPart(LifePart.class);
-        LifePart l2 = (LifePart) e2.getPart(LifePart.class);
+    public boolean isColliding(Entity e1, Entity e2) {
         PositionPart p1 = (PositionPart) e1.getPart(PositionPart.class);
         PositionPart p2 = (PositionPart) e2.getPart(PositionPart.class);
+        System.out.println(p1);
+        System.out.println(p2);
         if (p1 == null || p2 == null) return false;
 
         double dist = calculateDistance(p1, p2);
         double radSum = e1.getRadius() + e2.getRadius();
-
+        System.out.println(dist);
+        System.out.println(radSum);
         if (dist <= radSum) {
             return true;
         }
@@ -48,7 +49,7 @@ public class CollisionHandler implements IPostEntityProcessingService {
         return false;
     }
 
-    private double calculateDistance(PositionPart p1, PositionPart p2) {
+    public double calculateDistance(PositionPart p1, PositionPart p2) {
         return Math.sqrt(
                 Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
     }
