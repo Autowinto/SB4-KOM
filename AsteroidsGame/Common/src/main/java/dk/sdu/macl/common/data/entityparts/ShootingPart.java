@@ -27,6 +27,7 @@ public class ShootingPart implements EntityPart {
     public boolean getIsShooting() {
         return this.isShooting;
     }
+
     @Override
     public void process(GameData gameData, Entity entity) {
         cooldown -= gameData.getDelta();

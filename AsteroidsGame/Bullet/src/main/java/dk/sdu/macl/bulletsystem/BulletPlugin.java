@@ -23,7 +23,6 @@ public class BulletPlugin implements IGamePluginService, IBulletFactory {
     }
 
     private Entity spawnBullet(GameData gameData) {
-        System.out.println("Aooga");
         PositionPart sourcePos = sourceEntity.getPart(PositionPart.class);
 
         Bullet bullet = new Bullet();
